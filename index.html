@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>포토카드</title>
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- ▼ 폼 동작을 위한 추가 (flatpickr + 스타일) -->
+  <link rel="preconnect" href="https://iudczcnhxfxquxkfckpiwumkai0fvjjb.lambda-url.ap-northeast-2.on.aws" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/airbnb.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+
+    <!-- ✅ OG/Twitter -->
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="photocard-main">
+  <meta property="og:title" content="신축아파트를 확인해 보세요.">
+  <meta property="og:description" content="선착순 모집중">
+  <meta property="og:url" content="https://photocard-main.vercel.app/">
+  <meta property="og:image" content="https://photocard-main.vercel.app/img/sam.png">
+  <link rel="preload" as="image" href="/img/sam.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="photocard-main">
+  <meta name="twitter:description" content="신축아파트를 확인해보세요">
+
+</head>
+<body>
+  <div class="page">
+    <div class="container">
+      <!-- 좌측 카드(고정) -->
+      <aside class="left">
+        <div class="card" data-reveal id="main">
+          <div class="card-top">
+            <div class="cover-0"></div>
+            <!-- 원형 로고 영역 (이미지 교체: img/logo.png) -->
+            <div class="avatar">
+              <img src="img/log.png" alt="로고" class="logo-img">
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="site-name">Ziproad</div>
+              <div class="manager">
+                <span class="manager-name">박찬엽</span>
+                <span class="manager-title">부장</span>
+              </div>
+
+              <p class="lead">모델하우스 안내 및 분양 상담하는<br>박찬엽 부장입니다.</p>
+
+              <!-- 전화번호: 텍스트는 고정색, 배경 네모에 애니메이션 효과 -->
+              <a class="phone-cta" href="tel:010-2284-4859" title="전화 걸기">
+                <span class="phone-text">010-2284-4859</span>
+              </a>
+
+            <div class="social-bar">
+              <div class="sns-icons">
+              <a href="#" class="yt" 
+                 onclick="openYouTube(event)">
+                <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube">
+              </a>
+
+              <a href="#" class="ig"
+                 onclick="openInstagram(event)">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram">
+              </a>
+
+            </div>
+
+            </div>
+          </div>
+          <div class="card-bot">
+            <p>홈페이지를 선택해주세요.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 우측 콘텐츠 -->
+      <main class="right">
+        <!-- 히어로 -->
+        <section class="panel hero" data-reveal>
+                  <div class="card" data-reveal>
+          <div class="card-top">
+            <div class="cover-1"></div>
+            <!-- 원형 로고 영역 (이미지 교체: img/logo.png) -->
+            <div class="avatar">
+              <img src="img/log1.png" alt="로고" class="logo-img">
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="site-title-a">
+              <span>여의대방 더 마크원</span>
+            </div>
+
+            <div class="info">
+              <div class="row"><span class="label">현장</span><span class="value">서울특별시 영등포구 신길동 459-5번지 일대</span></div>
+              <div class="row"><span class="label">규모</span><span class="value">지하 4층 ~ 지상 42층, 아파트 6개동</span></div>
+              <div class="row"><span class="label">세대수</span><span class="value">총 1,228세대</span></div>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <a class="phone-cta" href="https://markone-c.vercel.app/" title="전화 걸기">
+              <p>홈페이지 바로가기</p>
+            </a>
+          </div>
+        </div>
+        </section>
+
+        <section class="panel hero" data-reveal>
+                  <div class="card" data-reveal>
+        <div class="card-top">
+            <div class="cover-2"></div>
+            <!-- 원형 로고 영역 (이미지 교체: img/logo.png) -->
+            <div class="avatar">
+              <img src="img/log2.png" alt="로고" class="logo-img">
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="site-title-a">
+              <span>보라매 파르크힐</span>
+            </div>
+
+            <div class="info">
+              <div class="row"><span class="label">현장</span><span class="value">서울특별시 동작구 신대방동 344-78번지 일원</span></div>
+              <div class="row"><span class="label">규모</span><span class="value">지하 3층 ~ 지상 22층/ 아파트 7개동</span></div>
+              <div class="row"><span class="label">세대수</span><span class="value">총 768세대</span></div>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <a class="phone-cta" href="https://potocard-borame.vercel.app/" title="전화 걸기">
+              <p>홈페이지 바로가기</p>
+            </a>
+          </div>
+        </div>
+        </section>
+
+  <!-- 모바일 전용 하단 고정 바(페이드 인) -->
+  <div class="mobile-cta fade-in">
+    <a href="#main" class="btn reserve">메인</a>
+    <a href="tel:010-2284-4859" class="btn call">전화</a>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
