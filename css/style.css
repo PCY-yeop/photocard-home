@@ -308,11 +308,11 @@ body{
 .btn.reserve{background:#332f2c}
 .btn.call{background:#8a6e4b}
 
-@media (max-width:768px){
+@media (max-width:820px){
   .mobile-cta{display:flex}
   body{padding-bottom:84px}
 }
-@media (min-width:769px){
+@media (min-width:821px){
   .mobile-cta{display:none !important}
 }
 
