@@ -191,20 +191,52 @@ function renderAll(){
     regionSectionHTML("gyeonggi", DATA.gyeonggi) +
     regionSectionHTML("local", DATA.local);
 }
-
 function applyFilter(regionKey, scroll = true){
   const sections = document.querySelectorAll("[data-region-section]");
+  let targetSection = null;
+
   sections.forEach(sec => {
     const key = sec.getAttribute("data-region-section");
-    sec.style.display = (regionKey === "all" || regionKey === key) ? "" : "none";
+    const show = (regionKey === "all" || regionKey === key);
+    sec.style.display = show ? "" : "none";
+
+    if(regionKey !== "all" && key === regionKey){
+      targetSection = sec;
+    }
   });
 
-  // ✅ 탭을 눌렀을 때만 지역 탭 위치로 스크롤
   if(scroll){
-    const top = document.querySelector(".region-tabs");
-    if(top) top.scrollIntoView({ behavior: "smooth", block: "start" });
+    // sticky 탭 높이 보정 (필요하면 60~110 조절)
+    const stickyOffset = 80;
+
+    // ✅ 전체 → 서울 섹션으로
+    if(regionKey === "all"){
+      const seoulSection = document.querySelector('[data-region-section="seoul"]');
+      if(seoulSection){
+        const y =
+          seoulSection.getBoundingClientRect().top +
+          window.pageYOffset -
+          stickyOffset;
+
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+      return;
+    }
+
+    // ✅ 특정 지역 → 해당 지역 섹션 맨 위로
+    if(targetSection){
+      const y =
+        targetSection.getBoundingClientRect().top +
+        window.pageYOffset -
+        stickyOffset;
+
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
   }
 }
+
+
+
 
 function setupTabs(){
   const tabs = document.querySelectorAll(".tab-btn");
