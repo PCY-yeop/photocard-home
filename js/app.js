@@ -1,3 +1,8 @@
+// ✅ (추가) 브라우저가 이전 스크롤 위치로 복원하는 것 방지
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
 // ============================
 // 1) SNS: 모바일은 앱 우선, PC는 웹
 // ============================
@@ -35,24 +40,24 @@ const DATA = {
     title: "서울",
     subtitle: "서울 현장",
     sites: [
-        {
-            name: "보라매 파르크힐",
-            addr: "서울특별시 동작구 신대방동 344-78번지 일원",
-            scale: "총 768세대 지하 3층 ~ 지상 22층 / 7개동",
-            types: "59㎡, 84㎡",
-            url: "https://potocard-borame.vercel.app/",
-            logo: "img/log2.png",
-            cover: "img/visual-bg-02.png"
-        },
-        {
-            name: "여의대방 더 마크원",
-            addr: "서울특별시 영등포구 신길동 459-5번지 일대",
-            scale: "총 1,228세대 지하 4층 ~ 지상 42층 / 6개동",
-            types: "59㎡, 84㎡",
-            url: "https://markone-c.vercel.app/",
-            logo: "img/log1.png",
-            cover: "img/visual-bg-01.png"
-        }
+      {
+        name: "보라매 파르크힐",
+        addr: "서울특별시 동작구 신대방동 344-78번지 일원",
+        scale: "총 768세대 지하 3층 ~ 지상 22층 / 7개동",
+        types: "59㎡, 84㎡",
+        url: "https://potocard-borame.vercel.app/",
+        logo: "img/log2.png",
+        cover: "img/visual-bg-02.png"
+      },
+      {
+        name: "여의대방 더 마크원",
+        addr: "서울특별시 영등포구 신길동 459-5번지 일대",
+        scale: "총 1,228세대 지하 4층 ~ 지상 42층 / 6개동",
+        types: "59㎡, 84㎡",
+        url: "https://markone-c.vercel.app/",
+        logo: "img/log1.png",
+        cover: "img/visual-bg-01.png"
+      }
     ]
   },
 
@@ -81,20 +86,17 @@ const DATA = {
         ]
           },
 
+
   gyeonggi: {
     title: "경기도",
     subtitle: "경기도 현장",
-    sites: [
-      // { name:"", addr:"", scale:"", types:"", url:"https://...", logo:"img/...", cover:"img/..." }
-    ]
+    sites: []
   },
 
   local: {
     title: "지방",
     subtitle: "지방 현장",
-    sites: [
-      // { name:"", addr:"", scale:"", types:"", url:"https://...", logo:"img/...", cover:"img/..." }
-    ]
+    sites: []
   }
 };
 
@@ -180,16 +182,18 @@ function renderAll(){
     regionSectionHTML("local", DATA.local);
 }
 
-function applyFilter(regionKey){
+function applyFilter(regionKey, scroll = true){
   const sections = document.querySelectorAll("[data-region-section]");
   sections.forEach(sec => {
     const key = sec.getAttribute("data-region-section");
     sec.style.display = (regionKey === "all" || regionKey === key) ? "" : "none";
   });
 
-  // 필터 바꿀 때 상단으로 살짝 올려주기(모바일에서 편함)
-  const top = document.querySelector(".region-tabs");
-  if(top) top.scrollIntoView({behavior:"smooth", block:"start"});
+  // ✅ 탭을 눌렀을 때만 지역 탭 위치로 스크롤
+  if(scroll){
+    const top = document.querySelector(".region-tabs");
+    if(top) top.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
 
 function setupTabs(){
@@ -197,7 +201,7 @@ function setupTabs(){
   tabs.forEach(btn => {
     btn.addEventListener("click", () => {
       tabs.forEach(b => b.classList.toggle("active", b === btn));
-      applyFilter(btn.dataset.region);
+      applyFilter(btn.dataset.region, true); // ✅ 클릭일 때만 스크롤
     });
   });
 }
@@ -225,11 +229,16 @@ function setupReveal(){
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // ✅ (추가) URL 해시(#...)가 있으면 제거해서 자동 스크롤 방지
+  if (location.hash) {
+    history.replaceState(null, "", location.pathname + location.search);
+  }
+
   renderAll();
   setupTabs();
 
-  // 기본: 전체
-  applyFilter("all");
+  // ✅ 기본: 전체 (초기에는 스크롤 이동 금지)
+  applyFilter("all", false);
 
   setupReveal();
 
@@ -250,4 +259,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+});
+
+// ✅ (추가) 리소스/폰트 로드까지 끝난 뒤 최종적으로 맨 위 고정 (모바일에서 제일 확실)
+window.addEventListener('load', () => {
+  window.scrollTo(0, 0);
+  setTimeout(() => window.scrollTo(0, 0), 0);
 });
