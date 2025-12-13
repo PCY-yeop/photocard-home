@@ -90,7 +90,17 @@ const DATA = {
   gyeonggi: {
     title: "경기도",
     subtitle: "경기도 현장",
-    sites: []
+    sites: [
+              {
+            name: "오산 세교 우미 린",
+            addr: "경기도 오산시 서동 40-2번지 일원(오산 서 2구역)",
+            scale: "총 1,424세대 지하 3층 ~ 지상 29층 / 10개동",
+            types: "84㎡, 94㎡, 101㎡",
+            url: "https://photocard-osan.vercel.app/",
+            logo: "img/log5.png",
+            cover: "img/visual-bg-05.png"
+          }         
+    ]
   },
 
   local: {
