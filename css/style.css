@@ -43,7 +43,7 @@ body{
 }
 .card.revealed{opacity:1;transform:translateY(0)}
 
-.card-top{position:relative;height:170px;background:linear-gradient(135deg,#c7ccd1,#b0b8c2)}
+.card-top{position:relative;height:160px;background:linear-gradient(135deg,#c7ccd1,#b0b8c2)}
 .cover-0{position:absolute;inset:0; background-image:url('../img/visual-bg-0.png'); background-size:cover; background-position:center;}
 
 .avatar{
@@ -55,7 +55,7 @@ body{
 }
 .logo-img{max-width:70%;max-height:70%;object-fit:contain}
 
-.card-body{padding:60px 8% 20px}
+.card-body{padding:50px 8% 20px}
 .site-name{font-weight:800;font-size:13px;text-align:right}
 
 .manager{font-size:30px;letter-spacing:3px;margin:10px 0 6px;font-weight:700}

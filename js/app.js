@@ -41,22 +41,13 @@ const DATA = {
     subtitle: "서울 현장",
     sites: [
       {
-        name: "보라매 파르크힐",
-        addr: "서울특별시 동작구 신대방동 344-78번지 일원",
-        scale: "총 768세대 지하 3층 ~ 지상 22층 / 7개동",
-        types: "59㎡, 84㎡",
-        url: "https://potocard-borame.vercel.app/",
+        name: "센트나인 등촌",
+        addr: "서울시 강서구 등촌동 365-21일원",
+        scale: "총 962세대 지하 5층 ~ 지상 21층 / 18개동",
+        types: "49㎡·59㎡·84㎡",
+        url: "https://www.xn----yd6eu8gh1fw3llxab5quoksrdb4sof157d.kr/",
         logo: "img/log2.png",
-        cover: "img/visual-bg-02.png"
-      },
-      {
-        name: "여의대방 더 마크원",
-        addr: "서울특별시 영등포구 신길동 459-5번지 일대",
-        scale: "총 1,228세대 지하 4층 ~ 지상 42층 / 6개동",
-        types: "59㎡, 84㎡",
-        url: "https://markone-c.vercel.app/",
-        logo: "img/log1.png",
-        cover: "img/visual-bg-01.png"
+        cover: "img/visual-bg-01.jpg"
       }
     ]
   },
@@ -66,23 +57,14 @@ const DATA = {
     subtitle: "인천 현장",
     sites: [
         {
-            name: "두산위브 더센트럴도화",
-            addr: "인천 미추홀구 도화동 53-28",
-            scale: "총 660세대 지하 2층 ~ 지상 39층 / 7개동",
-            types: "59㎡, 74㎡, 84㎡",
-            url: "https://potocard-doosan.vercel.app/",
+            name: "시티오씨엘 9단지",
+            addr: "용현·학익 1블록 도시개발사업 공동3BL",
+            scale: "총 1,949세대 지하 2층 ~ 지상 49층 / 9개동",
+            types: "59㎡·75㎡·84㎡·95㎡·101㎡·110㎡",
+            url: "https://city9.quv.kr/",
             logo: "img/log3.png",
-            cover: "img/visual-bg-03.jpg"
-          },
-        {
-            name: "검단 센트레빌 에듀시티",
-            addr: "인천시 서구 당하동 593번지 일원",
-            scale: "총 1,534세대 지하 2층 ~ 지상 25층 / 17개동",
-            types: "74㎡, 84㎡, 101㎡, 120㎡",
-            url: "https://photocard-geomdan.vercel.app/",
-            logo: "img/log4.png",
-            cover: "img/visual-bg-04.png"
-          }              
+            cover: "img/visual-bg-02.jpg"
+          }          
         ]
           },
 
@@ -92,20 +74,20 @@ const DATA = {
     subtitle: "경기도 현장",
     sites: [
               {
-            name: "오산 세교 우미 린",
-            addr: "경기도 오산시 서동 40-2번지 일원(오산 서 2구역)",
-            scale: "총 1,424세대 지하 3층 ~ 지상 29층 / 10개동",
-            types: "84㎡, 94㎡, 101㎡",
-            url: "https://photocard-osan.vercel.app/",
-            logo: "img/log5.png",
-            cover: "img/visual-bg-05.png"
+            name: "서동탄역 랜시티",
+            addr: "10년 장기 민간임대아파트",
+            scale: "약 1,500세대 지하 3층 ~ 지상 29층 / 14개동",
+            types: "59㎡·84㎡",
+            url: "https://sdtlancity.quv.kr/",
+            logo: "img/log4.png",
+            cover: "img/visual-bg-03.jpg"
           }         
     ]
   },
 
   local: {
-    title: "지방",
-    subtitle: "지방 현장",
+    title: "",
+    subtitle: "",
     sites: []
   }
 };
