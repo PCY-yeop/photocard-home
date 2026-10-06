@@ -1,292 +1,115 @@
-// ✅ (추가) 브라우저가 이전 스크롤 위치로 복원하는 것 방지
-if ('scrollRestoration' in history) {
-  history.scrollRestoration = 'manual';
-}
-
-// ============================
-// 1) SNS: 모바일은 앱 우선, PC는 웹
-// ============================
-function isMobile(){
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-
-function openYouTube(e){
-  e.preventDefault();
-  const webUrl = "https://www.youtube.com/@roadzip/shorts";
-  if(isMobile()){
-    window.location = "youtube://www.youtube.com/@roadzip/shorts";
-    setTimeout(()=>{ window.location = webUrl; }, 400);
-  } else {
-    window.open(webUrl, "_blank");
-  }
-}
-
-function openInstagram(e){
-  e.preventDefault();
-  const webUrl = "https://www.instagram.com/ziproad9/";
-  if(isMobile()){
-    window.location = "instagram://user?username=ziproad9";
-    setTimeout(()=>{ window.location = webUrl; }, 400);
-  } else {
-    window.open(webUrl, "_blank");
-  }
-}
-
-// ============================
-// 2) 현장 데이터(여기만 수정하면 됨)
-// ============================
-const DATA = {
-  seoul: {
-    title: "서울",
-    subtitle: "서울 현장",
-    sites: [
-      {
-        name: "센트나인 등촌",
-        addr: "서울시 강서구 등촌동 365-21일원",
-        scale: "총 962세대 지하 5층 ~ 지상 21층 / 18개동",
-        types: "49㎡·59㎡·84㎡",
-        url: "https://www.xn----yd6eu8gh1fw3llxab5quoksrdb4sof157d.kr/",
-        logo: "img/log2.png",
-        cover: "img/visual-bg-01.jpg"
-      }
-    ]
-  },
-
-  incheon: {
-    title: "인천",
-    subtitle: "인천 현장",
-    sites: [
-        {
-            name: "시티오씨엘 9단지",
-            addr: "용현·학익 1블록 도시개발사업 공동3BL",
-            scale: "총 1,949세대 지하 2층 ~ 지상 49층 / 9개동",
-            types: "59㎡·75㎡·84㎡·95㎡·101㎡·110㎡",
-            url: "https://city9.quv.kr/",
-            logo: "img/log3.png",
-            cover: "img/visual-bg-02.jpg"
-          }          
-        ]
-          },
-
-
-  gyeonggi: {
-    title: "경기도",
-    subtitle: "경기도 현장",
-    sites: [
-              {
-            name: "서동탄역 랜시티",
-            addr: "10년 장기 민간임대아파트",
-            scale: "약 1,500세대 지하 3층 ~ 지상 29층 / 14개동",
-            types: "59㎡·84㎡",
-            url: "https://sdtlancity.quv.kr/",
-            logo: "img/log4.png",
-            cover: "img/visual-bg-03.jpg"
-          }         
-    ]
-  },
-
-  local: {
-    title: "",
-    subtitle: "",
-    sites: []
-  }
+/* 화면 동작 코드 — 보통 수정할 필요 없어요. 내용은 전부 js/data.js 에서 수정하세요. */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+const digits = n => String(n).replace(/[^\d+]/g, "");
+const isMobile = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const openUrl = u => SETTINGS.newWindow ? window.open(u, "_blank", "noopener") : (location.href = u);
+const kakao = (SITE.sns || []).find(s => /카카오|kakao/i.test(s.label));
+const blank = SETTINGS.newWindow ? ' target="_blank" rel="noopener noreferrer"' : "";
+const sites = () => SITES.filter(s => !s.hidden);
+const regions = () => REGIONS.filter(r => !SETTINGS.hideEmptyRegions || sites().some(s => s.region === r.key));
+const IC = {
+  phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+  sms: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  kakao: '<path fill="currentColor" stroke="none" d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.8 5.3 4.6 6.7l-1 3.6c-.1.3.2.5.5.3l4.2-2.8c.6.1 1.1.1 1.7.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/>',
+  go: '<path d="M7 17 17 7M8 7h9v9"/>'
 };
+const ico = n => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>`;
+let current = "all";
 
-// ============================
-// 3) 렌더링 + 지역 필터(탭)
-// ============================
-function esc(s){
-  return String(s ?? "").replace(/[&<>"']/g, m => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[m]));
+function openSns(e, s){
+  e.preventDefault();
+  if (!isMobile() || !s.app) return void window.open(s.web, "_blank", "noopener");
+  let left = false; const f = () => { if (document.hidden) left = true; };
+  document.addEventListener("visibilitychange", f);
+  location.href = s.app;
+  setTimeout(() => { document.removeEventListener("visibilitychange", f); if (!left) location.href = s.web; }, 600);
 }
 
-function siteCardHTML(site){
-  const coverStyle = site.cover
-    ? `style="background-image:url('${esc(site.cover)}');background-size:cover;background-position:center;"`
-    : "";
-
-  const logoHTML = site.logo
-    ? `<img src="${esc(site.logo)}" alt="${esc(site.name)} 로고">`
-    : `<span style="font-weight:900;color:#0f172a;">Z</span>`;
-
+function cardHTML(s){
+  const rg = (REGIONS.find(r => r.key === s.region) || {}).label || "";
+  const badge = s.status ? `<span class="badge" style="background:${esc(STATUS_COLORS[s.status] || "#334155")}">${esc(s.status)}</span>` : "";
+  const rows = FIELDS.filter(([k]) => s[k]).map(([k, l]) => `<div class="row"><dt>${esc(l)}</dt><dd>${esc(s[k])}</dd></div>`).join("");
   return `
-    <article class="site-card" data-reveal data-region-item>
-      <div class="site-card-top">
-        <div class="cover-site" ${coverStyle}></div>
-        <div class="site-logo">${logoHTML}</div>
+    <article class="card${SETTINGS.cardClickable ? " click" : ""}" data-r="${esc(s.region)}" data-url="${esc(s.url)}">
+      <div class="img">${s.cover ? `<img src="${esc(s.cover)}" alt="" loading="lazy" decoding="async">` : ""}
+        ${badge}${s.sample ? `<span class="sample">SAMPLE</span>` : ""}
+        <span class="reg">${esc(rg)}</span>
+        ${s.logo ? `<span class="logo"><img src="${esc(s.logo)}" alt="${esc(s.name)} 로고" loading="lazy"></span>` : ""}
       </div>
-
-      <div class="site-card-body">
-        <h3 class="site-name-a">${esc(site.name)}</h3>
-
-        <div class="site-meta">
-          <div class="meta-row">
-            <span class="meta-label">현장</span>
-            <span class="meta-value">${esc(site.addr)}</span>
-          </div>
-          <div class="meta-row">
-            <span class="meta-label">규모</span>
-            <span class="meta-value">${esc(site.scale)}</span>
-          </div>
-          <div class="meta-row">
-            <span class="meta-label">타입</span>
-            <span class="meta-value">${esc(site.types)}</span>
-          </div>
-        </div>
+      <div class="body"><h3>${esc(s.name)}</h3><dl>${rows}</dl></div>
+      <div class="acts">
+        <a class="go rip shine" href="${esc(s.url)}"${blank}>홈페이지 바로가기 ${ico("go")}</a>
+        <a class="tl rip" href="tel:${digits(s.phone || SITE.phone)}" title="전화 상담">${ico("phone")}</a>
       </div>
-
-      <div class="site-card-bottom">
-        <a class="phone-cta" href="${esc(site.url)}" target="_blank" rel="noopener noreferrer" title="홈페이지 바로가기">
-          <p>홈페이지 바로가기</p>
-        </a>
-      </div>
-    </article>
-  `;
+    </article>`;
 }
 
-function regionSectionHTML(key, region){
-  const cards = (region.sites || []).length
-    ? region.sites.map(siteCardHTML).join("")
-    : `<div class="panel" style="padding:14px;text-align:center;color:#666;">등록된 현장이 아직 없어요.</div>`;
+function render(){
+  document.title = SITE.name;
+  const lines = esc(SITE.lead).split("\n");
+  const sns = (SITE.sns || []).map((s, i) => `<a href="${esc(s.web)}" data-sns="${i}" title="${esc(s.label)}"><img src="${esc(s.icon)}" alt="${esc(s.label)}" style="background:${esc(s.color || "#fff")}"></a>`).join("");
+  $("side").innerHTML = `
+    <div class="avatar"><img src="${esc(SITE.logo)}" alt="${esc(SITE.name)} 로고"></div>
+    <div class="brand">${esc(SITE.name)}</div>
+    <h1 class="name"><span class="wipe" style="--d:1">${esc(SITE.manager)}<small>${esc(SITE.title)}</small></span></h1>
+    <p class="lead">${lines.map((l, i) => `<span class="wipe" style="--d:${i + 2}">${l}</span>`).join("<br>")}</p>
+    <div class="contact">
+      <a class="cbtn gold rip shine" href="tel:${digits(SITE.phone)}">${ico("phone")}전화 상담<small>${esc(SITE.phone)}</small></a>
+      <a class="cbtn rip" href="sms:${digits(SITE.phone)}">${ico("sms")}문자</a>
+      ${kakao ? `<a class="cbtn rip" href="${esc(kakao.web)}" target="_blank" rel="noopener">${ico("kakao")}카카오톡</a>` : ""}
+    </div>
+    ${sns ? `<div class="sns">${sns}</div>` : ""}`;
 
-  return `
-    <section class="region" data-region-section="${esc(key)}">
-      <div class="region-head">
-        <h2 class="region-title">${esc(region.title)}</h2>
-        <p class="region-sub">${esc(region.subtitle)}</p>
-      </div>
-      <div class="site-grid">
-        ${cards}
-      </div>
-    </section>
-  `;
-}
+  const rs = regions(), all = sites();
+  $("bar").innerHTML = `<div><h2>분양 현장 <em>둘러보기</em></h2>
+    <div class="tabs" id="tabs"><div class="ind" id="ind"></div>
+      ${[`<button class="tab on rip" data-r="all">전체<span class="n">${all.length}</span></button>`]
+        .concat(rs.map(r => `<button class="tab rip" data-r="${esc(r.key)}">${esc(r.label)}<span class="n">${all.filter(s => s.region === r.key).length}</span></button>`)).join("")}
+    </div></div>`;
+  $("grid").innerHTML = all.length ? all.map(cardHTML).join("") : `<div class="empty">등록된 현장이 아직 없어요.</div>`;
+  $("footer").innerHTML = `${esc(SITE.footer || "")}<br>© ${new Date().getFullYear()} ${esc(SITE.name)}`;
+  $("dock").innerHTML = `<a href="sms:${digits(SITE.phone)}">${ico("sms")}문자</a>${kakao ? `<a href="${esc(kakao.web)}" target="_blank" rel="noopener">${ico("kakao")}카톡</a>` : ""}<a class="t" href="tel:${digits(SITE.phone)}">${ico("phone")}전화</a>`;
+  setTimeout(() => $("dock").classList.add("show"), 900);
 
-function renderAll(){
-  const wrap = document.getElementById("regions");
-  if(!wrap) return;
+  document.querySelectorAll("[data-sns]").forEach(a => a.addEventListener("click", e => openSns(e, SITE.sns[+a.dataset.sns])));
 
-  wrap.innerHTML =
-    regionSectionHTML("seoul", DATA.seoul) +
-    regionSectionHTML("incheon", DATA.incheon) +
-    regionSectionHTML("gyeonggi", DATA.gyeonggi) +
-    regionSectionHTML("local", DATA.local);
-}
-function applyFilter(regionKey, scroll = true){
-  const sections = document.querySelectorAll("[data-region-section]");
-  let targetSection = null;
+  const io = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(en => {
+    if (en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); }
+  }), { threshold: .12 }) : null;
+  const reveal = () => document.querySelectorAll(".card").forEach(c => io ? io.observe(c) : c.classList.add("in"));
+  reveal();
 
-  sections.forEach(sec => {
-    const key = sec.getAttribute("data-region-section");
-    const show = (regionKey === "all" || regionKey === key);
-    sec.style.display = show ? "" : "none";
-
-    if(regionKey !== "all" && key === regionKey){
-      targetSection = sec;
-    }
-  });
-
-  if(scroll){
-    // sticky 탭 높이 보정 (필요하면 60~110 조절)
-    const stickyOffset = 80;
-
-    // ✅ 전체 → 서울 섹션으로
-    if(regionKey === "all"){
-      const seoulSection = document.querySelector('[data-region-section="seoul"]');
-      if(seoulSection){
-        const y =
-          seoulSection.getBoundingClientRect().top +
-          window.pageYOffset -
-          stickyOffset;
-
-        window.scrollTo({ top: y, behavior: "smooth" });
-      }
-      return;
-    }
-
-    // ✅ 특정 지역 → 해당 지역 섹션 맨 위로
-    if(targetSection){
-      const y =
-        targetSection.getBoundingClientRect().top +
-        window.pageYOffset -
-        stickyOffset;
-
-      window.scrollTo({ top: y, behavior: "smooth" });
-    }
-  }
-}
-
-
-
-
-function setupTabs(){
-  const tabs = document.querySelectorAll(".tab-btn");
-  tabs.forEach(btn => {
-    btn.addEventListener("click", () => {
-      tabs.forEach(b => b.classList.toggle("active", b === btn));
-      applyFilter(btn.dataset.region, true); // ✅ 클릭일 때만 스크롤
+  $("tabs").addEventListener("click", e => {
+    const b = e.target.closest(".tab"); if (!b || b.dataset.r === current) return;
+    current = b.dataset.r;
+    document.querySelectorAll(".tab").forEach(t => t.classList.toggle("on", t === b));
+    moveInd();
+    document.querySelectorAll(".card").forEach(c => {
+      c.classList.remove("in");
+      c.style.display = (current === "all" || c.dataset.r === current) ? "" : "none";
     });
+    setTimeout(reveal, 60);
   });
+
+  if (SETTINGS.cardClickable) $("grid").addEventListener("click", e => {
+    if (e.target.closest("a")) return;
+    const c = e.target.closest(".card"); if (c) openUrl(c.dataset.url);
+  });
+
+  document.addEventListener("pointerdown", e => {
+    const b = e.target.closest(".rip"); if (!b) return;
+    const r = b.getBoundingClientRect(), d = Math.max(r.width, r.height), w = document.createElement("span");
+    w.className = "wave"; w.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`;
+    b.appendChild(w); setTimeout(() => w.remove(), 700);
+  });
+  moveInd(); window.addEventListener("resize", moveInd);
 }
 
-// ============================
-// 4) Reveal + 하단바
-// ============================
-function setupReveal(){
-  const items = document.querySelectorAll('[data-reveal]');
-  if (!('IntersectionObserver' in window) || items.length === 0){
-    items.forEach(el => el.classList.add('revealed'));
-    return;
-  }
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        entry.target.classList.add('revealed');
-        if(entry.target.hasAttribute('data-reveal-once')) io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-
-  items.forEach(el => io.observe(el));
+function moveInd(){
+  const on = document.querySelector(".tab.on"), ind = $("ind");
+  if (on && ind){ ind.style.width = on.offsetWidth + "px"; ind.style.transform = `translateX(${on.offsetLeft}px)`; }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  // ✅ (추가) URL 해시(#...)가 있으면 제거해서 자동 스크롤 방지
-  if (location.hash) {
-    history.replaceState(null, "", location.pathname + location.search);
-  }
-
-  renderAll();
-  setupTabs();
-
-  // ✅ 기본: 전체 (초기에는 스크롤 이동 금지)
-  applyFilter("all", false);
-
-  setupReveal();
-
-  // 모바일 하단바 페이드 인
-  const mobileCta = document.querySelector('.mobile-cta');
-  if(mobileCta){ setTimeout(()=> mobileCta.classList.add('show'), 200); }
-
-  // 메인(#main) 스무스
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if(!a) return;
-    const id = a.getAttribute('href');
-    if(id.length > 1){
-      const target = document.querySelector(id);
-      if(target){
-        e.preventDefault();
-        target.scrollIntoView({behavior:'smooth', block:'start'});
-      }
-    }
-  });
-});
-
-// ✅ (추가) 리소스/폰트 로드까지 끝난 뒤 최종적으로 맨 위 고정 (모바일에서 제일 확실)
-window.addEventListener('load', () => {
-  window.scrollTo(0, 0);
-  setTimeout(() => window.scrollTo(0, 0), 0);
-});
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+document.addEventListener("DOMContentLoaded", render);
