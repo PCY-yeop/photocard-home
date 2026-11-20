@@ -32,8 +32,8 @@ const SITE = {
     },
     {
       label: "Instagram",
-      web:   "https://www.instagram.com/",      // ← ✏️ 인스타 주소를 알려주시면 바꿔요 (예: https://www.instagram.com/아이디/)
-      app:   ""                                  // 앱으로 바로 열려면 instagram://user?username=아이디
+      web:   "https://www.instagram.com/myhome_shorts/",
+      app:   "instagram://user?username=myhome_shorts"   // 모바일에서 인스타 앱으로 바로 열려요
     },
     {
       label: "YouTube",
