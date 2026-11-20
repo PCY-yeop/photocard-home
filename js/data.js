@@ -12,36 +12,33 @@
    1) 내 명함 정보
    --------------------------------------------------------------- */
 const SITE = {
-  name:    "Ziproad",
-  logo:    "img/log.png",                 // 동그란 로고
-  cover:   "img/visual-bg-0.png",         // 명함 상단 배경 이미지
-  manager: "박찬엽",
-  title:   "부장",
-  lead:    "모델하우스 안내 및 분양 상담\n박찬엽 부장입니다.",   // \n = 줄바꿈
-  phone:   "010-2284-4859",        // 전화 + 하단 문자보내기 버튼에 같이 사용
+  name:    "내집쇼츠",                     // 유튜브 채널 이름 (탭 제목에 표시)
+  company: "Ziproad",                       // 하단에 작게 표시되는 이름 (지우면 안 보여요)
+  logo:    "img/logo-circle.png",           // 동그란 로고 (파비콘/공유 이미지용)
+  banner:  "img/logo-stack.png",            // 메인 큰 로고 (집 모양 세로형)
+  wide:    "img/logo-wide.png",             // 가로형 로고 (하단에 사용)
+  slogan:  "오늘도 새로운 분양 소식!",        // 흐르는 띠 문구
+  manager: "",                     // 담당자 이름 (비워두면 안 보임 / 쓰면 채널명 옆에 작게 표시)
+  title:   "",                     // 직함 (예: 부장)
+  lead:    "모델하우스 안내 및 분양 상담\n내집쇼츠입니다.",   // \n = 줄바꿈
+  phone:   "1800-6988",        // 전화 버튼에 사용
   footer:  "아래 지역 탭에서 현장을 선택해 주세요.",
 
   // SNS 아이콘 (지우면 아이콘도 사라져요 / 모바일은 앱 우선 실행)
   sns: [
     {
-      label: "YouTube",
-      icon:  "https://cdn-icons-png.flaticon.com/512/1384/1384060.png",
-      color: "linear-gradient(45deg,#ffffff,#ff0000,#ffffff)",
-      web:   "https://www.youtube.com/@roadzip/shorts",
-      app:   "youtube://www.youtube.com/@roadzip/shorts"
+      label: "카카오톡",
+      web:   "https://pf.kakao.com/_mRxlvX/friend"
     },
     {
       label: "Instagram",
-      icon:  "https://cdn-icons-png.flaticon.com/512/2111/2111463.png",
-      color: "linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)",
-      web:   "https://www.instagram.com/ziproad9/",
-      app:   "instagram://user?username=ziproad9"
+      web:   "https://www.instagram.com/",      // ← ✏️ 인스타 주소를 알려주시면 바꿔요 (예: https://www.instagram.com/아이디/)
+      app:   ""                                  // 앱으로 바로 열려면 instagram://user?username=아이디
     },
     {
-      label: "카카오톡",
-      icon:  "img/kakao.png",
-      color: "#FEE500",
-      web:   "https://pf.kakao.com/_여기에채널ID"   // ← ✏️ 내 카카오톡 채널(또는 오픈채팅) 주소로 바꿔주세요
+      label: "YouTube",
+      web:   "https://www.youtube.com/@%EB%82%B4%EC%A7%91%EC%87%BC%EC%B8%A0/shorts",
+      app:   "youtube://www.youtube.com/@%EB%82%B4%EC%A7%91%EC%87%BC%EC%B8%A0/shorts"
     }
   ]
 };
@@ -50,6 +47,11 @@ const SITE = {
 /* ---------------------------------------------------------------
    2) 기능 설정  (true = 켜기 / false = 끄기)
    --------------------------------------------------------------- */
+/* 구글 시트 연동: 아래 따옴표 안에 '웹에 게시한 CSV 주소'를 붙여넣으면
+   현장 목록을 구글 시트에서 불러와요. (README-시트연동.txt 참고)
+   비워두면(""), 아래 4) SITES 목록을 그대로 사용해요. 시트가 안 불러와져도 SITES 가 대신 나와요. */
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSHk1tNac6Qn5m5ViJsjfLTABMUMoQBrgDwqbJzNgGsWPeVxlZJ8tZS7FSB7_DKwc_Unvyn_ZB3Yp55/pub?gid=1100084316&single=true&output=csv";
+
 const SETTINGS = {
   hideEmptyRegions: true,   // 현장이 0개인 지역은 탭/섹션 자동 숨김
   cardClickable:    true,   // 카드 아무 곳이나 눌러도 홈페이지로 이동
@@ -97,8 +99,6 @@ const STATUS_COLORS = {
    ▶ 현장 잠시 숨기기: 블록 안에 hidden: true,  한 줄 추가 (삭제 안 해도 됨)
    ▶ 순서 바꾸기: 블록을 위/아래로 옮기면 화면 순서도 바뀝니다.
    ▶ 쉼표(,) 빼먹지 않게 주의! 마지막 항목 빼고는 항목 끝에 쉼표가 있어야 해요.
-
-   ▶ sample: true  → 카드에 'SAMPLE' 리본이 표시돼요. 내용을 실제로 고쳤으면 이 줄을 지우세요.
 
    [복사용 템플릿 - 필수는 name, region, url 3개뿐. 나머지는 비워도 됨]
    {
