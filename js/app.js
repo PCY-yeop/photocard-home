@@ -63,7 +63,7 @@ function render(){
     <div class="contact">
       <a class="cbtn tel rip shine" href="tel:${digits(SITE.phone)}">${ico("phone")}전화 상담<small>${esc(SITE.phone)}</small></a>
       <div class="row3">
-        ${kakao ? `<a class="sbtn kk rip" href="${esc(kakao.web)}" target="_blank" rel="noopener">${ico("kakao")}<span>카카오톡</span></a>` : ""}
+        ${kakao ? `<a class="sbtn kk rip" href="${esc(kakao.web)}" data-sns="${snsList.indexOf(kakao)}" target="_blank" rel="noopener">${ico("kakao")}<span>카카오톡</span></a>` : ""}
         ${insta ? `<a class="sbtn ig rip" href="${esc(insta.web)}" data-sns="${snsList.indexOf(insta)}" target="_blank" rel="noopener">${ico("insta")}<span>인스타</span></a>` : ""}
         ${youtube ? `<a class="sbtn yt rip" href="${esc(youtube.web)}" data-sns="${snsList.indexOf(youtube)}" target="_blank" rel="noopener">${ico("yt")}<span>유튜브</span></a>` : ""}
       </div>
@@ -77,7 +77,7 @@ function render(){
     </div>`;
   $("grid").innerHTML = all.length ? all.map(cardHTML).join("") : `<div class="empty">등록된 현장이 아직 없어요.</div>`;
   $("footer").innerHTML = `${SITE.wide ? `<img src="${esc(SITE.wide)}" alt="${esc(SITE.name)}">` : ""}${esc(SITE.footer || "")}<br>© ${new Date().getFullYear()} ${esc(SITE.name)}${SITE.company ? " · " + esc(SITE.company) : ""}`;
-  $("dock").innerHTML = `${youtube ? `<a class="y" href="${esc(youtube.web)}" data-sns="${snsList.indexOf(youtube)}">${ico("play")}쇼츠</a>` : ""}${kakao ? `<a href="${esc(kakao.web)}" target="_blank" rel="noopener">${ico("kakao")}카톡</a>` : ""}<a class="t" href="tel:${digits(SITE.phone)}">${ico("phone")}전화</a>`;
+  $("dock").innerHTML = `${youtube ? `<a class="y" href="${esc(youtube.web)}" data-sns="${snsList.indexOf(youtube)}">${ico("play")}쇼츠</a>` : ""}${kakao ? `<a href="${esc(kakao.web)}" data-sns="${snsList.indexOf(kakao)}" target="_blank" rel="noopener">${ico("kakao")}카톡</a>` : ""}<a class="t" href="tel:${digits(SITE.phone)}">${ico("phone")}전화</a>`;
   setTimeout(() => $("dock").classList.add("show"), 900);
 
   document.querySelectorAll("[data-sns]").forEach(a => a.addEventListener("click", e => openSns(e, snsList[+a.dataset.sns])));

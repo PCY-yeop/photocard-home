@@ -28,7 +28,8 @@ const SITE = {
   sns: [
     {
       label: "카카오톡",
-      web:   "https://pf.kakao.com/_mRxlvX/friend"
+      web:   "https://pf.kakao.com/_mRxlvX/friend",
+      app:   "kakaoplus://plusfriend/friend/_mRxlvX"      // 모바일: 카카오톡 앱의 '채널 추가' 화면으로 바로 열려요
     },
     {
       label: "Instagram",
